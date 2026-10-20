@@ -40,3 +40,8 @@ jobs:
         run: |
           docker push "${{ env.IMAGE_NAME }}:${{ github.sha }}"
           docker push "${{ env.IMAGE_NAME }}:latest"
+
+      - name: Log out from Registry
+        if: always()
+        run: docker logout registry.onstackit.cloud
+
