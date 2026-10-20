@@ -1,4 +1,4 @@
-name: Build and Test Container
+name: Build and Publish Container
 
 on:
   push:
@@ -9,13 +9,29 @@ on:
     branches:
       - main
 
+env:
+  IMAGE_NAME: ${{ secrets.REGISTRY_URL }}/pan-spielwiese/pan-spielwiese
+
 jobs:
-  build:
-    name: Build Docker Container
+  build-and-push:
+    name: Build and Push Docker Container
     runs-on: stackit-ubuntu-24
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: docker build -t pan-spielwiese:${{ github.sha }} .
+      - name: Log in to STACKIT Container Registry
+        run: |
+          echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login "${{ secrets.REGISTRY_URL }}" -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin
+
+      - name: Build and tag Docker image
+        run: |
+          docker build \
+            -t "${{ env.IMAGE_NAME }}:${{ github.sha }}" \
+            -t "${{ env.IMAGE_NAME }}:latest" \
+            .
+
+      - name: Push Docker image to Registry
+        run: |
+          docker push "${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          docker push "${{ env.IMAGE_NAME }}:latest"
