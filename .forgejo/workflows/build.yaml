@@ -10,7 +10,8 @@ on:
       - main
 
 env:
-  IMAGE_NAME: ${{ secrets.REGISTRY_URL }}/pan-spielwiese/pan-spielwiese
+  REGISTRY_HOST: registry.onstackit.cloud
+  IMAGE_NAME: registry.onstackit.cloud/pan-spielwiese/pan-spielwiese
 
 jobs:
   build-and-push:
@@ -21,8 +22,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Log in to STACKIT Container Registry
+        env:
+          DOCKER_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+          DOCKER_REGISTRY: ${{ secrets.REGISTRY_URL }}
         run: |
-          echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login "${{ secrets.REGISTRY_URL }}" -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin
+          echo "$DOCKER_PASSWORD" | docker login "$DOCKER_REGISTRY" -u "$DOCKER_USERNAME" --password-stdin
 
       - name: Build and tag Docker image
         run: |
