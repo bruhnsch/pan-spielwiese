@@ -12,7 +12,7 @@ on:
 jobs:
   build:
     name: Build Docker Container
-    runs-on: ubuntu-latest
+    runs-on: stackit-ubuntu-24
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
