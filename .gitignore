@@ -24,3 +24,16 @@
 hs_err_pid*
 replay_pid*
 
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.DS_Store
