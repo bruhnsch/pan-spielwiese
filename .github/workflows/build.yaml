@@ -1,4 +1,4 @@
-name: Build and Publish Container
+name: Build Container
 
 on:
   push:
@@ -10,12 +10,11 @@ on:
       - main
 
 env:
-  REGISTRY_HOST: registry.onstackit.cloud
-  IMAGE_NAME: registry.onstackit.cloud/pan-spielwiese/pan-spielwiese
+  IMAGE_NAME: pan-spielwiese
 
 jobs:
-  build-and-push:
-    name: Build and Push Docker Container
+  build:
+    name: Build Docker Container
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -31,14 +30,6 @@ jobs:
       - name: Run tests
         run: mvn -B test
 
-      - name: Log in to STACKIT Container Registry
-        env:
-          DOCKER_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-          DOCKER_REGISTRY: ${{ secrets.REGISTRY_URL }}
-        run: |
-          echo "$DOCKER_PASSWORD" | docker login "$DOCKER_REGISTRY" -u "$DOCKER_USERNAME" --password-stdin
-
       - name: Build and tag Docker image
         run: |
           docker build \
@@ -46,11 +37,12 @@ jobs:
             -t "${{ env.IMAGE_NAME }}:latest" \
             .
 
-      - name: Push Docker image to Registry
-        run: |
-          docker push "${{ env.IMAGE_NAME }}:${{ github.sha }}"
-          docker push "${{ env.IMAGE_NAME }}:latest"
+      - name: Save Docker image as tarball
+        run: docker save "${{ env.IMAGE_NAME }}:${{ github.sha }}" -o "${{ env.IMAGE_NAME }}.tar"
 
-      - name: Log out from Registry
-        if: always()
-        run: docker logout registry.onstackit.cloud
+      - name: Upload Docker image as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.IMAGE_NAME }}-${{ github.sha }}
+          path: ${{ env.IMAGE_NAME }}.tar
+          retention-days: 14

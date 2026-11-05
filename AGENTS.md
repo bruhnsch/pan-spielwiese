@@ -26,11 +26,12 @@ and as a STACKIT Hands-On demo. Package root: `de.nterra.panspielwiese`.
 
 ## CI/CD
 
-- `.github/workflows/build.yaml` builds and pushes the Docker image to the STACKIT
-  Container Registry (`registry.onstackit.cloud/pan-spielwiese/pan-spielwiese`) on
-  pushes to `main`/`feature/**` and on PRs to `main`
+- `.github/workflows/build.yaml` builds the Docker image on pushes to `main`/`feature/**`
+  and on PRs to `main`
 - Tags: commit SHA and `latest`
-- The workflow runs `mvn -B test` before building the image, so failing tests block the push
+- The image is not pushed to a registry; it's saved with `docker save` and uploaded as a
+  workflow run artifact (retained for 14 days), downloadable from the run's summary page
+- The workflow runs `mvn -B test` before building the image, so failing tests block the build
 
 ## Conventions
 
