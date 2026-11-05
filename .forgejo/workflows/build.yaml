@@ -21,6 +21,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Run tests
+        run: mvn -B test
+
       - name: Log in to STACKIT Container Registry
         env:
           DOCKER_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
