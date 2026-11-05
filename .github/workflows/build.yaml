@@ -16,7 +16,7 @@ env:
 jobs:
   build-and-push:
     name: Build and Push Docker Container
-    runs-on: stackit-ubuntu-24
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -54,4 +54,3 @@ jobs:
       - name: Log out from Registry
         if: always()
         run: docker logout registry.onstackit.cloud
-

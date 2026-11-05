@@ -26,7 +26,7 @@ and as a STACKIT Hands-On demo. Package root: `de.nterra.panspielwiese`.
 
 ## CI/CD
 
-- `.forgejo/workflows/build.yaml` builds and pushes the Docker image to the STACKIT
+- `.github/workflows/build.yaml` builds and pushes the Docker image to the STACKIT
   Container Registry (`registry.onstackit.cloud/pan-spielwiese/pan-spielwiese`) on
   pushes to `main`/`feature/**` and on PRs to `main`
 - Tags: commit SHA and `latest`
